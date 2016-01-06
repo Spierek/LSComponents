@@ -6,11 +6,11 @@ public class LSGamepad : MonoBehaviour {
 	#region Variables
 	private static LSGamepad m_Instance;
 	
-	public static float leftStickDelta = 0;
-	private static float prevAngle = 0;
+	public static float 	leftStickDelta = 0;
+	private static float 	prevAngle = 0;
 
-	private static string defHorizontalAxis = "HorizontalGP";
-	private static string defVerticalAxis = "VerticalGP";
+	private static string 	defHorizontalAxis = "HorizontalGP";
+	private static string 	defVerticalAxis = "VerticalGP";
 	#endregion
 
 	#region Singleton
