@@ -5,16 +5,33 @@ using System.Collections.Generic;
 [RequireComponent(typeof(GUIText))]
 public class LSDebug : MonoBehaviour {
 	#region Variables
+	private static LSDebug			m_Instance;
+
     public bool                     enableDebug = true;
 
     private static GUIText          textDisplay;
     private static StringBuilder    text;
     private static List<DebugWord>  textList;
 
+    private static StringBuilder    tempSB = new StringBuilder();
     private static Vector3          tempV3;
     #endregion
 
-    #region Monobehaviour Methods
+	#region Singleton
+	[RuntimeInitializeOnLoadMethod]
+	private static void CreateSingleton() {
+		if (m_Instance == null) {
+			GameObject go = new GameObject("LSDebug");
+			m_Instance = go.AddComponent<LSDebug>();
+			DontDestroyOnLoad(go);
+			go.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector;
+
+			m_Instance.Reset();
+		}
+	}
+	#endregion
+
+    #region Monobehaviour
 	// Sets default values on script attach
 	void Reset() {
 		transform.position = new Vector3(0, 1, 0);
@@ -56,9 +73,7 @@ public class LSDebug : MonoBehaviour {
     }
 
     public static void Write(string name, string value) {
-        text.Append(name);
-        text.Append(": ");
-        text.Append(value);
+		text.Append(PrepareLine(name, value));
     }
 
     public static void WriteLine(string txt) {
@@ -66,14 +81,27 @@ public class LSDebug : MonoBehaviour {
     }
 
     public static void WriteLine(string name, string value) {
-        text.Append(name);
-        text.Append(": ");
-        text.AppendLine(value);
+		text.AppendLine(PrepareLine(name, value));
     }
 
     public static void WriteLine(string txt, float duration) {
         textList.Add(new DebugWord(txt, Time.realtimeSinceStartup + duration));
     }
+
+    public static void WriteLine(string txt, string value, float duration) {
+		string str = PrepareLine(txt, value);
+		DebugWord d = new DebugWord(str, Time.realtimeSinceStartup + duration);
+        textList.Add(d);
+    }
+
+	private static string PrepareLine(string name, string value) {
+		tempSB.Remove(0, tempSB.Length);		// clear
+		tempSB.Append(name);
+        tempSB.Append(": ");
+        tempSB.Append(value);
+
+		return tempSB.ToString();
+	}
 
     private void AppendList() {
         for (int i = 0; i < textList.Count; i++) {
@@ -81,8 +109,9 @@ public class LSDebug : MonoBehaviour {
             if (textList[i].time < Time.realtimeSinceStartup) {
                 textList.RemoveAt(i);
             }
-            if (i < textList.Count)
+            if (i < textList.Count) {
                 text.AppendLine(textList[i].text);
+			}
         }
     }
     #endregion
