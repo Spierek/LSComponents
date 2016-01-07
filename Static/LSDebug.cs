@@ -2,12 +2,22 @@
 using System.Text;
 using System.Collections.Generic;
 
+public struct DebugWord {
+    public string   text;
+    public float    time;
+
+    public DebugWord(string text, float time) {
+        this.text = text;
+        this.time = time;
+    }
+}
+
 [RequireComponent(typeof(GUIText))]
 public class LSDebug : MonoBehaviour {
 	#region Variables
 	private static LSDebug			m_Instance;
 
-    public bool                     enableDebug = false;
+    private static bool             enableDebug = false;
 
     private static GUIText          textDisplay;
     private static StringBuilder    text;
@@ -43,22 +53,15 @@ public class LSDebug : MonoBehaviour {
 		textDisplay.alignment = TextAlignment.Left;
 		textDisplay.fontSize = 10;
 		textDisplay.color = new Color(0.1f, 0.1f, 0.1f, 0.9f);
-	}
 
-    void Awake() {
         textDisplay = GetComponent<GUIText>();
         textDisplay.enabled = enableDebug;
         text = new StringBuilder();
         textList = new List<DebugWord>();
-    }
+	}
 
     void LateUpdate() {
-        if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
-            enableDebug = !enableDebug;
-            textDisplay.enabled = enableDebug;
-        }
-
-        // display debug text
+		CheckEnabled();
         if (!enableDebug) return;
 
         AppendList();
@@ -68,6 +71,19 @@ public class LSDebug : MonoBehaviour {
     #endregion
 
     #region Methods
+	// ENABLE
+	public static void SetEnabled(bool set) {
+		enableDebug = !enableDebug;
+        textDisplay.enabled = enableDebug;
+	}
+
+	private void CheckEnabled() {
+        if (Input.GetKeyDown(KeyCode.KeypadMinus)) {
+			SetEnabled(enableDebug);
+        }
+	}
+
+	// DISPLAY
     public static void Write(string txt) {
         text.Append(txt);
     }
@@ -115,14 +131,4 @@ public class LSDebug : MonoBehaviour {
         }
     }
     #endregion
-}
-
-public struct DebugWord {
-    public string   text;
-    public float    time;
-
-    public DebugWord(string text, float time) {
-        this.text = text;
-        this.time = time;
-    }
 }
