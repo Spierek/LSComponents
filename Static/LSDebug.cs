@@ -7,7 +7,7 @@ public class LSDebug : MonoBehaviour {
 	#region Variables
 	private static LSDebug			m_Instance;
 
-    public bool                     enableDebug = true;
+    public bool                     enableDebug = false;
 
     private static GUIText          textDisplay;
     private static StringBuilder    text;
