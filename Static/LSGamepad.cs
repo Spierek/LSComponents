@@ -14,7 +14,7 @@ public class LSGamepad : MonoBehaviour {
 	#endregion
 
 	#region Singleton
-	[RuntimeInitializeOnLoadMethod]
+	//[RuntimeInitializeOnLoadMethod]
 	private static void CreateSingleton() {
 		if (m_Instance == null) {
 			GameObject go = new GameObject("LSGamepad");
