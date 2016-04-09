@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 [System.Flags]
 public enum ShakeAxes {
@@ -12,7 +11,7 @@ public class CameraShaker : MonoBehaviour {
 	#region Variables
 	public static CameraShaker Instance;
 
-	private Camera		camera;
+	private new Camera	camera;
 	private Vector3		cameraPos;
 	#endregion
 
