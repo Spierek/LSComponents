@@ -2,83 +2,94 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LSGamepad : MonoBehaviour {
-	#region Variables
-	private static LSGamepad m_Instance;
-	
-	public static float 	leftStickDelta = 0;
-	private static float 	prevAngle = 0;
+public class LSGamepad : MonoBehaviour
+{
+    #region Variables
+    private static LSGamepad m_Instance;
 
-	private static string 	defHorizontalAxis = "HorizontalGP";
-	private static string 	defVerticalAxis = "VerticalGP";
-	#endregion
+    public static float     leftStickDelta = 0;
+    private static float    prevAngle = 0;
 
-	#region Singleton
-	//[RuntimeInitializeOnLoadMethod]
-	private static void CreateSingleton() {
-		if (m_Instance == null) {
-			GameObject go = new GameObject("LSGamepad");
-			m_Instance = go.AddComponent<LSGamepad>();
-			DontDestroyOnLoad(go);
-			go.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector;
+    private static string   defHorizontalAxis = "HorizontalGP";
+    private static string   defVerticalAxis = "VerticalGP";
+    #endregion
 
-			m_Instance.Initialize();
-		}
-	}
+    #region Singleton
+    //[RuntimeInitializeOnLoadMethod]
+    private static void CreateSingleton()
+    {
+        if (m_Instance == null)
+        {
+            GameObject go = new GameObject("LSGamepad");
+            m_Instance = go.AddComponent<LSGamepad>();
+            DontDestroyOnLoad(go);
+            go.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector;
 
-	private void Initialize() {
-		prevAngle = GetStickAngle();
-	}
-	#endregion
+            m_Instance.Initialize();
+        }
+    }
 
-	#region MonoBehaviour
-	private void LateUpdate() {
-		CalculateStickDelta();
+    private void Initialize()
+    {
+        prevAngle = GetStickAngle();
+    }
+    #endregion
 
-		LSDebug.WriteLine("Stick Angle", GetStickAngle().ToString());
-	}
-	#endregion
+    #region MonoBehaviour
+    private void LateUpdate()
+    {
+        CalculateStickDelta();
 
-	#region Methods
-	// Returns left stick angle from -180 to 180 (default set to 0)
-	public static float GetStickAngle() {
-		return GetStickAngle(Input.GetAxisRaw(defHorizontalAxis), Input.GetAxisRaw(defVerticalAxis));
-	}
+        LSDebug.WriteLine("Stick Angle", GetStickAngle().ToString());
+    }
+    #endregion
 
-	public static float GetStickAngle(float axisHorizontal, float axisVertical) {
-		float result = Mathf.Atan2(axisHorizontal, axisVertical) * Mathf.Rad2Deg;
-		return result;
-	}
+    #region Methods
+    // Returns left stick angle from -180 to 180 (default set to 0)
+    public static float GetStickAngle()
+    {
+        return GetStickAngle(Input.GetAxisRaw(defHorizontalAxis), Input.GetAxisRaw(defVerticalAxis));
+    }
 
-	// Same as GetStickAngle() but takes dead zones into account
-	public static bool GetStickAngleDZ(float deadZone, ref float angle) {
-		float hor = Input.GetAxisRaw(defHorizontalAxis);
-		float vert = Input.GetAxisRaw(defVerticalAxis);
+    public static float GetStickAngle(float axisHorizontal, float axisVertical)
+    {
+        float result = Mathf.Atan2(axisHorizontal, axisVertical) * Mathf.Rad2Deg;
+        return result;
+    }
 
-		if (Mathf.Abs(hor) < deadZone && Mathf.Abs(vert) < deadZone)
-			return false;
+    // Same as GetStickAngle() but takes dead zones into account
+    public static bool GetStickAngleDZ(float deadZone, ref float angle)
+    {
+        float hor = Input.GetAxisRaw(defHorizontalAxis);
+        float vert = Input.GetAxisRaw(defVerticalAxis);
 
-		angle = GetStickAngle(hor, vert);
-		return true;
-	}
+        if (Mathf.Abs(hor) < deadZone && Mathf.Abs(vert) < deadZone)
+            return false;
 
-	// Returns left stick rotation delta in current frame
-	private void CalculateStickDelta() {
-		float angle = 0f;
-		GetStickAngleDZ(0.1f, ref angle);
+        angle = GetStickAngle(hor, vert);
+        return true;
+    }
 
-		if (Mathf.Abs(angle) > 90f) {
-			// check if 180/-180 threshold was crossed
-			float prevSign = Mathf.Sign(prevAngle);
-			if (Mathf.Sign(angle) != prevSign) {
-				prevAngle -= (prevSign > 0) ? 360 : -360;
-			}
-		}
+    // Returns left stick rotation delta in current frame
+    private void CalculateStickDelta()
+    {
+        float angle = 0f;
+        GetStickAngleDZ(0.1f, ref angle);
 
-		leftStickDelta = angle - prevAngle;
+        if (Mathf.Abs(angle) > 90f)
+        {
+            // check if 180/-180 threshold was crossed
+            float prevSign = Mathf.Sign(prevAngle);
+            if (Mathf.Sign(angle) != prevSign)
+            {
+                prevAngle -= (prevSign > 0) ? 360 : -360;
+            }
+        }
 
-		LSDebug.WriteLine("Delta", leftStickDelta.ToString());
-		prevAngle = angle;
-	}
-	#endregion
+        leftStickDelta = angle - prevAngle;
+
+        LSDebug.WriteLine("Delta", leftStickDelta.ToString());
+        prevAngle = angle;
+    }
+    #endregion
 }
