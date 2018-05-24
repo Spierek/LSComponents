@@ -70,9 +70,9 @@ namespace LSTools
             if (m_Template != null)
             {
                 APoolable obj = Instantiate(m_Template, CachedTransform);
-               obj.gameObject.SetActive(false);
+                obj.gameObject.SetActive(false);
                 obj.Create(this);
-               m_InactiveObjects.Push(obj);
+                m_InactiveObjects.Push(obj);
             }
         }
     }
