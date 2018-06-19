@@ -2,7 +2,7 @@
 
 namespace LSTools
 {
-    public class CachedMonoBehaviour : MonoBehaviour
+    public abstract class CachedMonoBehaviour : MonoBehaviour
     {
         private Transform m_CachedTransform;
         public Transform CachedTransform
