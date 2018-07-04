@@ -4,7 +4,7 @@ using UnityEditor;
 namespace LSTools
 {
     [CustomPropertyDrawer(typeof(ConditionalAttribute))]
-    public class ConditionalPropertyDrawer : PropertyDrawer
+    public class ConditionalAttributeDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
