@@ -4,5 +4,23 @@
     public abstract class AFSMModule : AModule
     {
         public FiniteStateMachine FSM { get; protected set; }
+
+        protected override void HandleInitialization()
+        {
+            FSM = new FiniteStateMachine();
+        }
+
+        private void Update()
+        {
+            if (FSM != null)
+            {
+                FSM.Update();
+            }
+        }
+
+        protected override void HandleUninitialization()
+        {
+            FSM.Reset();
+        }
     }
 }

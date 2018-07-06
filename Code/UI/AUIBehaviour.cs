@@ -20,6 +20,11 @@ namespace LSTools
             SetVisibility(m_InitializeVisible);
         }
 
+        public virtual void Uninitialize()
+        {
+            Hide();
+        }
+
         public void SetVisibility(bool set)
         {
             if (set)
