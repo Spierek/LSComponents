@@ -10,7 +10,7 @@ namespace LSTools
 
         protected virtual bool m_InitializeVisible { get { return true; } }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             FindReferences();
         }
@@ -53,7 +53,7 @@ namespace LSTools
             FindReferences();
         }
 
-        private void FindReferences()
+        protected virtual void FindReferences()
         {
             if (m_Group == null)
             {
