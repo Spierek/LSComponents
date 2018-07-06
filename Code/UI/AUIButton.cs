@@ -21,6 +21,11 @@ namespace LSTools
 
         protected abstract void HandleButtonClicked();
 
+        public void SetInteractable(bool set)
+        {
+            m_Button.interactable = set;
+        }
+
         protected override void FindReferences()
         {
             base.FindReferences();
