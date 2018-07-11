@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 
+#if UNITY_EDITOR
 public class LSAssetExt : MonoBehaviour
 {
     // by @glitchers via http://answers.unity.com/answers/1216386/view.html
@@ -21,3 +22,4 @@ public class LSAssetExt : MonoBehaviour
         return assets;
     }
 }
+#endif
