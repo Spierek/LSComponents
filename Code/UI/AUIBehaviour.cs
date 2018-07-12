@@ -10,6 +10,8 @@ namespace LSTools
 
         protected virtual bool m_InitializeVisible { get { return true; } }
 
+        public bool IsVisible { get; private set; }
+
         protected virtual void Awake()
         {
             FindReferences();
@@ -39,6 +41,7 @@ namespace LSTools
 
         public void Show()
         {
+            IsVisible = true;
             m_Group.alpha = 1;
             HandleShow();
         }
@@ -47,6 +50,7 @@ namespace LSTools
 
         public void Hide()
         {
+            IsVisible = false;
             m_Group.alpha = 0;
             HandleHide();
         }
