@@ -1,6 +1,6 @@
 ﻿namespace LSTools
 {
-    public class UIButton : AUIButton
+    public class UIBaseButton : AUIButton
     {
         public readonly AEvent OnClicked = new AEvent();
 
