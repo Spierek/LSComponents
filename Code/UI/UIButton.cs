@@ -3,8 +3,10 @@ using UnityEngine.UI;
 
 namespace LSTools
 {
-    public abstract class AUIButton : AUIBehaviour
+    public class UIButton : AUIBehaviour
     {
+        public readonly AEvent OnClicked = new AEvent();
+
         [SerializeField]
         protected Button m_Button;
 
@@ -19,7 +21,10 @@ namespace LSTools
             m_Button.onClick.RemoveListener(HandleButtonClicked);
         }
 
-        protected abstract void HandleButtonClicked();
+        protected virtual void HandleButtonClicked()
+        {
+            OnClicked.Invoke();
+        }
 
         public void SetInteractable(bool set)
         {
