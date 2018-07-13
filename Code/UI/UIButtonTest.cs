@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace LSTools
 {
     [RequireComponent(typeof(Button))]
-    public class UIButton : AUIBehaviour
+    public class UIButtonTest : AUIBehaviour
     {
         public readonly AEvent OnClicked = new AEvent();
 
