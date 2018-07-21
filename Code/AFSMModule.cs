@@ -10,7 +10,7 @@
             FSM = new FiniteStateMachine();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (FSM != null)
             {
