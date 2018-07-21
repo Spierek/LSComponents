@@ -43,6 +43,7 @@ namespace LSTools
         {
             IsVisible = true;
             m_Group.alpha = 1;
+            m_Group.blocksRaycasts = true;
             HandleShow();
         }
 
@@ -52,6 +53,7 @@ namespace LSTools
         {
             IsVisible = false;
             m_Group.alpha = 0;
+            m_Group.blocksRaycasts = false;
             HandleHide();
         }
 
