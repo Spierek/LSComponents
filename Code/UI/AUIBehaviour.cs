@@ -52,8 +52,11 @@ namespace LSTools
         public void Hide()
         {
             IsVisible = false;
-            m_Group.alpha = 0;
-            m_Group.blocksRaycasts = false;
+            if (m_Group != null)
+            {
+                m_Group.alpha = 0;
+                m_Group.blocksRaycasts = false;
+            }
             HandleHide();
         }
 

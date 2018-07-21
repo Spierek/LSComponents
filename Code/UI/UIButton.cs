@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace LSTools
 {
     [RequireComponent(typeof(Button))]
-    public class UIButton : AUIBehaviour
+    public class UIButton : AUIBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         public readonly AEvent OnClicked = new AEvent();
+        public readonly AEvent OnDown = new AEvent();
+        public readonly AEvent OnUp = new AEvent();
+
+        public bool IsHeld { get; private set; }
 
         [SerializeField]
         protected Button m_Button;
@@ -39,6 +44,18 @@ namespace LSTools
             {
                 m_Button = GetComponent<Button>();
             }
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            IsHeld = true;
+            OnDown.Invoke();
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            IsHeld = false;
+            OnUp.Invoke();
         }
     }
 }
