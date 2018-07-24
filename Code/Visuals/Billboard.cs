@@ -36,10 +36,13 @@ namespace LSTools
 
         private void Update()
         {
-            // rotates the object relative to the camera
-            Vector3 targetPos = CachedTransform.position + m_CameraTransform.rotation * (m_ReverseFace ? Vector3.forward : Vector3.back) ;
-            Vector3 targetOrientation = m_CameraTransform.rotation * GetAxis(m_Axis);
-            transform.LookAt(targetPos, targetOrientation);
+            if (m_CameraTransform != null)
+            {
+                // rotates the object relative to the camera
+                Vector3 targetPos = CachedTransform.position + m_CameraTransform.rotation * (m_ReverseFace ? Vector3.forward : Vector3.back) ;
+                Vector3 targetOrientation = m_CameraTransform.rotation * GetAxis(m_Axis);
+                CachedTransform.LookAt(targetPos, targetOrientation);
+            }
         }
 
         // return a direction based upon chosen axis
