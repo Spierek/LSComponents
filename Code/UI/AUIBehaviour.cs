@@ -42,25 +42,32 @@ namespace LSTools
         public void Show()
         {
             IsVisible = true;
-            m_Group.alpha = 1;
             m_Group.blocksRaycasts = true;
             HandleShow();
         }
 
-        protected virtual void HandleShow() { }
+        protected virtual void HandleShow()
+        {
+            m_Group.alpha = 1;
+        }
 
         public void Hide()
         {
             IsVisible = false;
             if (m_Group != null)
             {
-                m_Group.alpha = 0;
                 m_Group.blocksRaycasts = false;
             }
             HandleHide();
         }
 
-        protected virtual void HandleHide() { }
+        protected virtual void HandleHide()
+        {
+            if (m_Group != null)
+            {
+                m_Group.alpha = 0;
+            }
+        }
 
         private void OnValidate()
         {
