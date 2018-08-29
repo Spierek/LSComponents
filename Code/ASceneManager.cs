@@ -44,7 +44,7 @@ namespace LSTools
             }
         }
 
-        private void RemoveModule(AModule module, bool isClearing = false)
+        protected void RemoveModule(AModule module, bool isClearing = false)
         {
             if (module != null)
             {
@@ -57,7 +57,7 @@ namespace LSTools
         }
 
         // removes all modules in reverse order
-        private void ClearModules()
+        protected void ClearModules()
         {
             for (int i = m_InitializedModules.Count - 1; i >= 0; --i)
             {

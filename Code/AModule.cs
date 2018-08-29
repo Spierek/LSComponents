@@ -8,14 +8,20 @@
 
         public void Initialize()
         {
-            HandleInitialization();
-            IsInitialized = true;
+            if (!IsInitialized)
+            {
+                HandleInitialization();
+                IsInitialized = true;
+            }
         }
 
         public void Uninitialize()
         {
-            IsInitialized = false;
-            HandleUninitialization();
+            if (IsInitialized)
+            {
+                HandleUninitialization();
+                IsInitialized = false;
+            }
             m_Binder.Unbind();
         }
 
