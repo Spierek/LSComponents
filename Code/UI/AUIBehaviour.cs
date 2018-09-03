@@ -5,6 +5,9 @@ namespace LSTools
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class AUIBehaviour : CachedMonoBehaviour
     {
+        public readonly AEvent<AUIBehaviour> OnShown = new AEvent<AUIBehaviour>();
+        public readonly AEvent<AUIBehaviour> OnHidden = new AEvent<AUIBehaviour>();
+
         [SerializeField]
         protected CanvasGroup m_Group;
 
@@ -40,7 +43,7 @@ namespace LSTools
             // force hidden position, then fade in properly
             if (m_UseFade && m_InitializeVisible)
             {
-                Hide(true);
+                Hide(true, false);
             }
 
             SetVisibility(m_InitializeVisible);
@@ -63,34 +66,42 @@ namespace LSTools
             }
         }
 
-        public void Show(bool force = false)
+        public void Show(bool force = false, bool sendEvent = true)
         {
             m_Group.blocksRaycasts = true;
+
+            HandleShow();
 
             m_TargetAlpha = 1;
             if (!m_UseFade || force)
             {
                 SetAlpha(1);
+                if (sendEvent)
+                {
+                    OnShown.Invoke(this);
+                }
             }
-
-            HandleShow();
         }
 
         protected virtual void HandleShow()
         {
         }
 
-        public void Hide(bool force = false)
+        public void Hide(bool force = false, bool sendEvent = true)
         {
             m_Group.blocksRaycasts = false;
+
+            HandleHide();
 
             m_TargetAlpha = 0;
             if (!m_UseFade || force)
             {
                 SetAlpha(0);
+                if (sendEvent)
+                {
+                    OnHidden.Invoke(this);
+                }
             }
-
-            HandleHide();
         }
 
         protected virtual void HandleHide()
@@ -99,7 +110,7 @@ namespace LSTools
 
         private void UpdateVisibility()
         {
-            if (m_TargetAlpha != m_Group.alpha)
+            if (m_Group.alpha != m_TargetAlpha)
             {
                 float sign = Mathf.Sign(m_TargetAlpha - m_Group.alpha);
                 float duration = sign > 0 ? m_FadeInDuration : m_FadeOutDuration;
@@ -109,6 +120,18 @@ namespace LSTools
                 float alpha = m_Group.alpha + mod;
                 m_Group.alpha = alpha;
                 m_Group.alpha = Mathf.Clamp01(m_Group.alpha);
+
+                if (m_Group.alpha == m_TargetAlpha)
+                {
+                    if (m_Group.alpha == 1)
+                    {
+                        OnShown.Invoke(this);
+                    }
+                    else if (m_Group.alpha == 0)
+                    {
+                        OnHidden.Invoke(this);
+                    }
+                }
             }
         }
 
