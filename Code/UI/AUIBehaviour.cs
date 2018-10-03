@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace LSTools
 {
@@ -20,6 +21,20 @@ namespace LSTools
         protected float m_FadeOutDuration = 1f;
 
         private float m_TargetAlpha = 1f;
+
+        [NonSerialized]
+        private RectTransform m_RectTransform;
+        public RectTransform RectTransform
+        {
+            get
+            {
+                if (m_RectTransform == null)
+                {
+                    m_RectTransform = transform as RectTransform;
+                }
+                return m_RectTransform;
+            }
+        }
 
         protected virtual bool m_InitializeVisible { get { return true; } }
 

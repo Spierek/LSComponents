@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace LSTools
 {
     public abstract class CachedMonoBehaviour : MonoBehaviour
     {
+        [NonSerialized]
         private Transform m_CachedTransform;
         public Transform CachedTransform
         {
