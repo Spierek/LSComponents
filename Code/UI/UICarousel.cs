@@ -50,6 +50,7 @@ namespace LSTools
                 {
                     rt.localPosition = Vector3.zero;
                     rt.sizeDelta = Vector2.zero;
+                    rt.localScale = Vector2.one;        // necessary for GP's level select, but could be an option?
 
                     if (m_ElementWidth == DEFAULT_WIDTH)
                     {
