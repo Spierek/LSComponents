@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UnityEngine.EventSystems;
 
 namespace LSTools
 {
     // #TODO LS vertical carousel support
     // #TODO LS looping support
-    public class UICarousel : AUIBehaviour
+    // #TODO LS drag falloff curve
+    public class UICarousel : AUIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField]
         private Transform m_CarouselDir;
@@ -21,7 +23,15 @@ namespace LSTools
         [NonSerialized]
         protected float m_ElementWidth = DEFAULT_WIDTH;       // #TODO LS could be handled better?
 
+        public bool IsDragging { get; private set; }
+        [NonSerialized]
+        protected float m_DragStartPosition = 0f;
+        [NonSerialized]
+        protected float m_DragBuffer = 0f;
+
         protected const float DEFAULT_WIDTH = -1f;
+        protected const float DRAG_ACCEL_THRESHOLD = 0.15f;      // if drag acceleration is higher than this on drag end, go to next item
+        protected const float SCREEN_WRAP_DISTANCE = 0.5f;      // how many screen width sizes can we scroll past
 
         public override void Initialize()
         {
@@ -36,6 +46,51 @@ namespace LSTools
                 RepositionElements();
             }
             UpdatePosition();
+        }
+
+        public void OnBeginDrag(PointerEventData data)
+        {
+            IsDragging = true;
+            m_DragStartPosition = Position;
+            m_DragBuffer = 0;
+        }
+
+        public void OnDrag(PointerEventData data)
+        {
+            m_DragBuffer -= data.delta.x / m_ElementWidth;
+            SetPosition(m_DragStartPosition + m_DragBuffer);
+        }
+
+        // using some stuff from https://github.com/taka-oyama/ScrollSnap/blob/master/Assets/ScrollSnap.cs
+        public void OnEndDrag(PointerEventData data)
+        {
+            // check if we should snap to next item
+            float dx = data.delta.x / m_ElementWidth;
+            float acceleration = Mathf.Abs(dx / Time.deltaTime);
+            if (acceleration > DRAG_ACCEL_THRESHOLD && acceleration != Mathf.Infinity)
+            {
+                float pos = Position;
+                if (dx > 0)
+                {
+                    pos = Mathf.FloorToInt(pos);
+                }
+                else
+                {
+                    pos = Mathf.CeilToInt(pos);
+                }
+                SetTargetPosition(pos);
+
+                m_DragStartPosition = pos;
+                m_DragBuffer = 0f;
+            }
+            // otherwise round to nearest
+            else
+            {
+                float newPos = Mathf.RoundToInt(Position);
+                SetTargetPosition(newPos);
+            }
+
+            IsDragging = false;
         }
 
         public void AddElement(AUICarouselElement element)
@@ -77,7 +132,7 @@ namespace LSTools
         {
             if (Position != pos)
             {
-                Position = pos;
+                Position = Mathf.Clamp(pos, -SCREEN_WRAP_DISTANCE, m_Elements.Count - 1 + SCREEN_WRAP_DISTANCE);
                 float xOffset = -pos * m_ElementWidth;
                 m_CarouselDir.localPosition = new Vector3(xOffset, m_CarouselDir.localPosition.y, m_CarouselDir.localPosition.z);
             }
@@ -96,7 +151,7 @@ namespace LSTools
 
         public void SetTargetPosition(float target)
         {
-            TargetPosition = target;
+            TargetPosition = Mathf.Clamp(target, 0, m_Elements.Count - 1);
         }
 
         private void RepositionElements()
@@ -116,8 +171,11 @@ namespace LSTools
 
         private void UpdatePosition()
         {
-            float newPos = Mathf.Lerp(Position, TargetPosition, 0.5f);      // #TODO LS fix me
-            SetPosition(newPos);
+            if (!IsDragging)
+            {
+                float newPos = Mathf.Lerp(Position, TargetPosition, 0.5f);      // #TODO LS fix me
+                SetPosition(newPos);
+            }
         }
     }
 }
