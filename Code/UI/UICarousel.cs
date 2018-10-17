@@ -12,10 +12,13 @@ namespace LSTools
     {
         [SerializeField]
         private Transform m_CarouselDir;
+        [SerializeField]
+        private AnimationCurve m_WrapCurve = AnimationCurve.Linear(0, 1, 1, 0);
 
         public float Position { get; private set; }
         public float TargetPosition { get; private set; }
         public bool IsDirty { get; private set; }
+        public bool IsDragging { get; private set; }
 
         [NonSerialized]
         protected List<AUICarouselElement> m_Elements = new List<AUICarouselElement>();
@@ -23,7 +26,6 @@ namespace LSTools
         [NonSerialized]
         protected float m_ElementWidth = DEFAULT_WIDTH;       // #TODO LS could be handled better?
 
-        public bool IsDragging { get; private set; }
         [NonSerialized]
         protected float m_DragStartPosition = 0f;
         [NonSerialized]
@@ -57,7 +59,21 @@ namespace LSTools
 
         public void OnDrag(PointerEventData data)
         {
-            m_DragBuffer -= data.delta.x / m_ElementWidth;
+            float dx = data.delta.x / m_ElementWidth;
+            float wrapTest = m_DragStartPosition + m_DragBuffer - dx;
+
+            // if going past bounds, reduce acceleration
+            if (wrapTest < 0)
+            {
+                dx *= m_WrapCurve.Evaluate(-wrapTest);
+            }
+            else if (wrapTest > m_Elements.Count - 1)
+            {
+                dx *= m_WrapCurve.Evaluate(wrapTest - (m_Elements.Count - 1));
+            }
+
+            // apply translation
+            m_DragBuffer -= dx;
             SetPosition(m_DragStartPosition + m_DragBuffer);
         }
 
@@ -173,7 +189,7 @@ namespace LSTools
         {
             if (!IsDragging)
             {
-                float newPos = Mathf.Lerp(Position, TargetPosition, 0.5f);      // #TODO LS fix me
+                float newPos = Mathf.Lerp(Position, TargetPosition, 0.4f);      // #TODO LS fix me
                 SetPosition(newPos);
             }
         }
