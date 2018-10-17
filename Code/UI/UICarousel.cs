@@ -10,6 +10,8 @@ namespace LSTools
     // #TODO LS drag falloff curve
     public class UICarousel : AUIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        public readonly AEvent<float> OnDragPositionUpdated = new AEvent<float>();
+
         [SerializeField]
         private Transform m_CarouselDir;
         [SerializeField]
@@ -74,38 +76,41 @@ namespace LSTools
 
             // apply translation
             m_DragBuffer -= dx;
+            float newPos = m_DragStartPosition + m_DragBuffer;
             SetPosition(m_DragStartPosition + m_DragBuffer);
+            OnDragPositionUpdated.Invoke(newPos);
         }
 
         // using some stuff from https://github.com/taka-oyama/ScrollSnap/blob/master/Assets/ScrollSnap.cs
         public void OnEndDrag(PointerEventData data)
         {
+            float newPos = Position;
+
             // check if we should snap to next item
             float dx = data.delta.x / m_ElementWidth;
             float acceleration = Mathf.Abs(dx / Time.deltaTime);
             if (acceleration > DRAG_ACCEL_THRESHOLD && acceleration != Mathf.Infinity)
             {
-                float pos = Position;
                 if (dx > 0)
                 {
-                    pos = Mathf.FloorToInt(pos);
+                    newPos = Mathf.FloorToInt(newPos);
                 }
                 else
                 {
-                    pos = Mathf.CeilToInt(pos);
+                    newPos = Mathf.CeilToInt(newPos);
                 }
-                SetTargetPosition(pos);
-
-                m_DragStartPosition = pos;
-                m_DragBuffer = 0f;
             }
             // otherwise round to nearest
             else
             {
-                float newPos = Mathf.RoundToInt(Position);
-                SetTargetPosition(newPos);
+                newPos = Mathf.RoundToInt(newPos);
             }
 
+            SetTargetPosition(newPos);
+            OnDragPositionUpdated.Invoke(newPos);
+
+            m_DragStartPosition = newPos;
+            m_DragBuffer = 0f;
             IsDragging = false;
         }
 
