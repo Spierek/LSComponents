@@ -31,6 +31,7 @@ namespace LSTools
 
         protected void LateUpdate()
         {
+            CheckElementWidth();
             if (IsDirty)
             {
                 RepositionElements();
@@ -45,7 +46,7 @@ namespace LSTools
                 m_Elements.Add(element);
                 element.CachedTransform.SetParent(m_CarouselDir);
 
-                RectTransform rt = element.CachedTransform as RectTransform;
+                RectTransform rt = element.RectTransform;
                 if (rt != null)
                 {
                     rt.localPosition = Vector3.zero;
@@ -97,6 +98,24 @@ namespace LSTools
         public void SetTargetPosition(float target)
         {
             TargetPosition = target;
+        }
+
+        // #HACK LS checks every frame if default width has not changed and sets dirty flag if necessary
+        private void CheckElementWidth()
+        {
+            if (m_Elements.Count > 0)
+            {
+                AUICarouselElement element = m_Elements[0];
+                if (element != null)
+                {
+                    RectTransform rt = element.RectTransform;
+                    if (rt != null && m_ElementWidth != rt.rect.width)
+                    {
+                        m_ElementWidth = rt.rect.width;
+                        IsDirty = true;
+                    }
+                }
+            }
         }
 
         private void RepositionElements()
