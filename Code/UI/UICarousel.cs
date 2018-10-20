@@ -189,6 +189,7 @@ namespace LSTools
                     {
                         m_ElementWidth = rt.rect.width;
                         IsDirty = true;
+                        SetPosition(0);
                     }
                 }
             }
