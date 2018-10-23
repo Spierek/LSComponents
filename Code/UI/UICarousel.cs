@@ -11,6 +11,7 @@ namespace LSTools
     public class UICarousel : AUIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public readonly AEvent<float> OnDragPositionUpdated = new AEvent<float>();
+        public readonly AEvent OnDragFinished = new AEvent();
 
         [SerializeField]
         private Transform m_CarouselDir;
@@ -113,6 +114,8 @@ namespace LSTools
             m_DragStartPosition = newPos;
             m_DragBuffer = 0f;
             IsDragging = false;
+
+            OnDragFinished.Invoke();
         }
 
         public void AddElement(AUICarouselElement element)
