@@ -43,7 +43,7 @@ namespace LSTools
             Uninitialize();
         }
 
-        private void Initialize()
+        protected void Initialize()
         {
             if (!IsInitialized)
             {

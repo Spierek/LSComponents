@@ -9,6 +9,17 @@ public abstract class AGameManager : ASISingleton<AGameManager>
     protected List<AModule> m_InitializedModules = new List<AModule>();
 
     protected readonly AEventBinder m_Binder = new AEventBinder();
+    protected virtual bool m_InitializeOnAwake { get { return true; } }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (m_InitializeOnAwake)
+        {
+            Initialize();
+        }
+    }
 
     protected override void HandleInitialization()
     {

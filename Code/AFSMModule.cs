@@ -22,5 +22,10 @@
         {
             FSM.Reset();
         }
+
+        protected void AddState(AState state)
+        {
+            FSM.AddState(state);
+        }
     }
 }
