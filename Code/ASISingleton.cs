@@ -15,11 +15,14 @@ namespace LSTools
                 {
                     T inst = new GameObject(string.Format("[{0}]", typeof(T))).AddComponent<T>();
                     m_Instance = inst;
+                    m_Instance.Initialize();
                 }
 
                 return m_Instance;
             }
         }
+
+        public bool IsInitialized { get; private set; }
 
         protected virtual void Awake()
         {
@@ -33,6 +36,37 @@ namespace LSTools
             }
 
             DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            Uninitialize();
+        }
+
+        private void Initialize()
+        {
+            if (!IsInitialized)
+            {
+                HandleInitialization();
+                IsInitialized = true;
+            }
+        }
+
+        protected virtual void HandleInitialization()
+        {
+        }
+
+        protected void Uninitialize()
+        {
+            if (IsInitialized)
+            {
+                HandleUninitialization();
+                IsInitialized = false;
+            }
+        }
+
+        protected virtual void HandleUninitialization()
+        {
         }
     }
 }
