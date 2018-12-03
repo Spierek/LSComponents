@@ -5,11 +5,13 @@ using UnityEngine.UI;
 namespace LSTools
 {
     [RequireComponent(typeof(Button))]
-    public class UIButton : AUIBehaviour, IPointerDownHandler, IPointerUpHandler
+    public class UIButton : AUIBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
     {
         public readonly AEvent OnClicked = new AEvent();
+        public readonly AEvent OnEnter = new AEvent();
         public readonly AEvent OnDown = new AEvent();
         public readonly AEvent OnUp = new AEvent();
+        public readonly AEvent OnExit = new AEvent();
 
         public bool IsHeld { get; private set; }
 
@@ -46,16 +48,26 @@ namespace LSTools
             }
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
+        {
+            OnEnter.Invoke();
+        }
+
+        public virtual void OnPointerDown(PointerEventData eventData)
         {
             IsHeld = true;
             OnDown.Invoke();
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        public virtual void OnPointerUp(PointerEventData eventData)
         {
             IsHeld = false;
             OnUp.Invoke();
+        }
+
+        public virtual void OnPointerExit(PointerEventData eventData)
+        {
+            OnExit.Invoke();
         }
     }
 }
