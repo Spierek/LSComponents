@@ -67,6 +67,4 @@ namespace LSTools
             m_InitializedModules.Clear();
         }
     }
-
-
 }
