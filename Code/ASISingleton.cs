@@ -22,6 +22,7 @@ namespace LSTools
             }
         }
 
+        protected virtual bool m_DontDestroyOnLoad { get { return true; } }
         public bool IsInitialized { get; private set; }
 
         protected virtual void Awake()
@@ -35,7 +36,10 @@ namespace LSTools
                 Destroy(gameObject);
             }
 
-            DontDestroyOnLoad(gameObject);
+            if (m_DontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
 
         private void OnDestroy()
