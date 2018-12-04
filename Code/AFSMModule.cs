@@ -20,7 +20,10 @@
 
         protected override void HandleUninitialization()
         {
-            FSM.Reset();
+            if (FSM != null)
+            {
+                FSM.Reset();
+            }
         }
 
         protected void AddState(AState state)
