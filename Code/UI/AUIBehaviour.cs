@@ -167,5 +167,12 @@ namespace LSTools
                 m_Group = GetComponent<CanvasGroup>();
             }
         }
+
+#if UNITY_EDITOR
+        public void Editor_SetVisibility(bool set)
+        {
+            SetAlpha(set ? 1 : 0);
+        }
+#endif
     }
 }
