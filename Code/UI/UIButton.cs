@@ -8,10 +8,10 @@ namespace LSTools
     public class UIButton : AUIBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, ISelectHandler
     {
         public readonly AEvent OnClicked = new AEvent();
-        public readonly AEvent OnEnter = new AEvent();
+        public readonly AEvent<UIButton> OnEnter = new AEvent<UIButton>();
         public readonly AEvent OnDown = new AEvent();
         public readonly AEvent OnUp = new AEvent();
-        public readonly AEvent OnExit = new AEvent();
+        public readonly AEvent<UIButton> OnExit = new AEvent<UIButton>();
 
         public readonly AEvent<UIButton> OnSelected = new AEvent<UIButton>();
 
@@ -52,7 +52,7 @@ namespace LSTools
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            OnEnter.Invoke();
+            OnEnter.Invoke(this);
         }
 
         public virtual void OnPointerDown(PointerEventData eventData)
@@ -69,7 +69,7 @@ namespace LSTools
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
-            OnExit.Invoke();
+            OnExit.Invoke(this);
         }
 
         public void OnSelect(BaseEventData eventData)
