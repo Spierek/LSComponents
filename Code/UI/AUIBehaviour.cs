@@ -84,6 +84,7 @@ namespace LSTools
         public void Show(bool force = false, bool sendEvent = true)
         {
             m_Group.blocksRaycasts = true;
+            m_Group.interactable = true;
 
             HandleShow();
 
@@ -105,6 +106,7 @@ namespace LSTools
         public void Hide(bool force = false, bool sendEvent = true)
         {
             m_Group.blocksRaycasts = false;
+            m_Group.interactable = false;
 
             HandleHide();
 
