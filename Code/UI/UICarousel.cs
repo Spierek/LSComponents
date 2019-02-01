@@ -35,7 +35,7 @@ namespace LSTools
         protected float m_DragBuffer = 0f;
 
         protected const float DEFAULT_WIDTH = -1f;
-        protected const float DRAG_ACCEL_THRESHOLD = 0.15f;      // if drag acceleration is higher than this on drag end, go to next item
+        protected const float DRAG_ACCEL_THRESHOLD = 0.12f;      // if drag acceleration is higher than this on drag end, go to next item
         protected const float SCREEN_WRAP_DISTANCE = 0.5f;      // how many screen width sizes can we scroll past
 
         public override void Initialize()
